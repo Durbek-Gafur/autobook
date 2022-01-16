@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Filter</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css" rel="stylesheet" /> -->
+   <script src="locs.js"></script>
+   <!-- <script src="locsNew27.js"></script> -->
+   <script src="codeTOgetLocations.js"></script>
+  
+   <style type="text/css">
+      .form-control{
+        display: block;
+        width: 90%;
+      }
+      .control-labe, .form-horizontal{
+        display: inline-block;
+      }
+      .form-horizontal{
+        width: 9.7%;
+      }
+      .col-sm-2{
+        width: 10%;
+        display: inline-block;
+      }
+</style>
+</head>
+<body>
+
+  <form class="form-horizontal" id="f__0" action="" class="col-sm-10" >
+      <label class="control-label col-sm-##2" for="trl">Trailer status:</label> <!--ll2.loads[0].stops[0].trailerDetails[0].assetOwner  if true it is PO-->
+        <select class="form-control" id="trl__0" name="trl">
+          <option value=0>REQ/PROV</option>
+          <option value="REQUIRED" >REQUIRED</option>  <!--null-->
+          <option value="PROVIDED" >PROVIDED</option> <!--AZNG-->
+        </select>
+      <label class="control-label col-sm-1" for="trip_type">Trip type:</label> <!--ll2.workOpportunityType-->
+        <select class="form-control" id="trip_type__0" name="trip_type">
+          <option value=0>RT/ONE-WAY</option>
+          <option value="ROUND_TRIP" >ROUND_TRIP</option>
+          <option value="ONE_WAY" >ONE_WAY</option>
+        </select>
+        <select class="form-control" id="solo__0" name="solo"> <!--ll2.transitOperatorType-->
+          <option value=0>SOLO/TEAM</option>
+          <option value="SINGLE_DRIVER">SINGLE_DRIVER</option>
+          <option value="TEAM_DRIVER">TEAM_DRIVER</option>
+        </select>
+
+      <label class="control-label col-sm-2" for="origin">Origin:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="origin__0" placeholder="HEBRON, KY" name="origin"> <!--have ready function in multi need to give lon/lat from json and from server json 
+
+
+        [  var server_loc = ll2.loads[0].stops[0].location ; server_loc.latitude ; server_loc.longitude         ]-->
+      <label class="control-label col-sm-1" for="r1">Radius:</label>
+      <!-- need to pass radius as well -->
+        <input type="number" class="form-control" id="r1__0" placeholder="50" name="r1" value=50>
+
+      <label class="control-label col-sm-2" for="destination">Destination:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="destination__0" placeholder="SAN BERNARDINO, CA" name="destination">
+
+        <!-- ll[0].loads[0].stops[ll[0].loads[0].stops.length-1].location  -->
+      <label class="control-label col-sm-1" for="r2" >Radius:</label>
+      <input type="number" class="form-control" id="r2__0" placeholder="50" value=50 name="r2">
+
+      
+
+      <label class="control-label col-sm-1" for="bk">Book:</label>
+        <input type="number" class="form-control" id="bk__0" value=1 name="bk">
+
+        <!--ll2.payout.value-->
+     <label class="control-label col-sm-##2" for="minpay">Payout Min:</label> 
+        <input type="number" class="form-control" id="minpay__0" placeholder="600" value=0 name="minpay">
+
+          <!-- ll2.totalDistanc.value / ll2.payout.value-->
+        <label class="control-label col-sm-2" for="minper">Price/mile:</label>
+        <input type="number" class="form-control" id="minper__0" placeholder="2" value=2 name="minper">
+     <!--  <label class="control-label col-sm-1" for="maxpay">Max:</label>
+        <input type="number" class="form-control" id="maxpay__0" placeholder="12000" value=12000 name="maxpay"> -->
+      <label class="control-label col-sm-##2" for="mindis">Trip distance Min:</label>  <!-- ll2.totalDistanc.value -->
+        <input type="number" class="form-control" id="mindis__0" value=10 name="mindis">  <!-- ll2.totalDistanc.value MIN 0-->
+      <label class="control-label col-sm-1" for="maxdis"> Trip distance Max:</label>
+        <input type="number" class="form-control" id="maxdis__0" value=9999 name="maxdis"> <!-- ll2.totalDistanc.value MAX 99999-->
+      <!-- <label class="control-label col-sm-2" for="minhour">Trip duration Min:</label>
+        <input type="number" class="form-control" id="minhour__0" placeholder="1 hour" name="minhour">
+      <label class="control-label col-sm-1" for="maxhour">Max:</label>
+        <input type="number" class="form-control" id="maxhour__0" placeholder="48 hours" name="maxhour"> -->
+     <!--ll2.startTime-->
+      <label class="control-label col-sm-##2" for="time">Date and time:</label><br><b class="sampleTime"></b>
+        <input type="text" class="form-control time" id="time__0"  name="time"> 
+        <!--ll2.endTime-->
+      <label class="control-label col-sm-1" for="endtime">End by time:</label>
+        <input type="text" class="form-control endtime" id="endtime__0"  name="endtime"> 
+      <!-- <label class="control-label col-sm-2" for="mpty"><input type='checkbox' id='checkbox1'> Empty trailer:</label>
+        <input type="text" class="form-control" id="mpty" placeholder="" name="mpty" > -->
+
+         <!--ll2.stopCount-->
+      <label class="control-label col-sm-1" for="stops">Stops:</label>
+        <input type="number" class="form-control" id="stops__0" value="2" name="stops">
+        <br><label class="col-sm-##2"><input type="checkbox" id="nyichi__0" name="remember"> NY ichi</label>      
+
+   
+
+      <div class="col-sm-offset-2 col-sm-10">
+        <br><button type="button"  id="generate__0" class="btn btn-default">Add</button>
+        <button type="button"  id="remove__0" class="btn btn-default">Remove</button>
+       
+     
+       </div>
+
+  </form>
+
+  <form class="form-horizontal" id="f__1" action="" class="col-sm-10" >
+      <label class="control-label col-sm-##2" for="trl">Trailer status:</label> <!--ll2.loads[0].stops[0].trailerDetails[0].assetOwner  if true it is PO-->
+        <select class="form-control" id="trl__1" name="trl">
+          <option value=0>REQ/PROV</option>
+          <option value="REQUIRED" >REQUIRED</option>  <!--null-->
+          <option value="PROVIDED" >PROVIDED</option> <!--AZNG-->
+        </select>
+      <label class="control-label col-sm-1" for="trip_type">Trip type:</label> <!--ll2.workOpportunityType-->
+        <select class="form-control" id="trip_type__1" name="trip_type">
+          <option value=0>RT/ONE-WAY</option>
+          <option value="ROUND_TRIP" >ROUND_TRIP</option>
+          <option value="ONE_WAY" >ONE_WAY</option>
+        </select>
+        <select class="form-control" id="solo__1" name="solo"> <!--ll2.transitOperatorType-->
+          <option value=0>SOLO/TEAM</option>
+          <option value="SINGLE_DRIVER">SINGLE_DRIVER</option>
+          <option value="TEAM_DRIVER">TEAM_DRIVER</option>
+        </select>
+
+      <label class="control-label col-sm-2" for="origin">Origin:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="origin__1" placeholder="HEBRON, KY" name="origin"> <!--have ready function in multi need to give lon/lat from json and from server json 
+
+
+        [  var server_loc = ll2.loads[0].stops[0].location ; server_loc.latitude ; server_loc.longitude         ]-->
+      <label class="control-label col-sm-1" for="r1">Radius:</label>
+      <!-- need to pass radius as well -->
+        <input type="number" class="form-control" id="r1__1" placeholder="50" name="r1" value=50>
+
+      <label class="control-label col-sm-2" for="destination">Destination:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="destination__1" placeholder="SAN BERNARDINO, CA" name="destination">
+
+        <!-- ll[0].loads[0].stops[ll[0].loads[0].stops.length-1].location  -->
+      <label class="control-label col-sm-1" for="r2" >Radius:</label>
+      <input type="number" class="form-control" id="r2__1" placeholder="50" value=50 name="r2">
+
+      
+
+      <label class="control-label col-sm-1" for="bk">Book:</label>
+        <input type="number" class="form-control" id="bk__1" value=1 name="bk">
+
+        <!--ll2.payout.value-->
+     <label class="control-label col-sm-##2" for="minpay">Payout Min:</label> 
+        <input type="number" class="form-control" id="minpay__1" placeholder="600" value=0 name="minpay">
+
+          <!-- ll2.totalDistanc.value / ll2.payout.value-->
+        <label class="control-label col-sm-2" for="minper">Price/mile:</label>
+        <input type="number" class="form-control" id="minper__1" placeholder="2" value=2 name="minper">
+     <!--  <label class="control-label col-sm-1" for="maxpay">Max:</label>
+        <input type="number" class="form-control" id="maxpay__1" placeholder="12000" value=12000 name="maxpay"> -->
+      <label class="control-label col-sm-##2" for="mindis">Trip distance Min:</label>  <!-- ll2.totalDistanc.value -->
+        <input type="number" class="form-control" id="mindis__1" value=10 name="mindis">  <!-- ll2.totalDistanc.value MIN 0-->
+      <label class="control-label col-sm-1" for="maxdis"> Trip distance Max:</label>
+        <input type="number" class="form-control" id="maxdis__1" value=9999 name="maxdis"> <!-- ll2.totalDistanc.value MAX 99999-->
+      <!-- <label class="control-label col-sm-2" for="minhour">Trip duration Min:</label>
+        <input type="number" class="form-control" id="minhour__1" placeholder="1 hour" name="minhour">
+      <label class="control-label col-sm-1" for="maxhour">Max:</label>
+        <input type="number" class="form-control" id="maxhour__1" placeholder="48 hours" name="maxhour"> -->
+     <!--ll2.startTime-->
+      <label class="control-label col-sm-##2" for="time">Date and time:</label><br><b class="sampleTime"></b>
+        <input type="text" class="form-control time" id="time__1"  name="time"> 
+        <!--ll2.endTime-->
+      <label class="control-label col-sm-1" for="endtime">End by time:</label>
+        <input type="text" class="form-control endtime" id="endtime__1"  name="endtime"> 
+      <!-- <label class="control-label col-sm-2" for="mpty"><input type='checkbox' id='checkbox1'> Empty trailer:</label>
+        <input type="text" class="form-control" id="mpty" placeholder="" name="mpty" > -->
+
+         <!--ll2.stopCount-->
+      <label class="control-label col-sm-1" for="stops">Stops:</label>
+        <input type="number" class="form-control" id="stops__1" value="2" name="stops">
+        <br><label class="col-sm-##2"><input type="checkbox" id="nyichi__1" name="remember"> NY ichi</label>      
+
+   
+
+      <div class="col-sm-offset-2 col-sm-10">
+        <br><button type="button"  id="generate__1" class="btn btn-default">Add</button>        
+        <button type="button"  id="remove__1" class="btn btn-default">Remove</button>
+       
+     
+       </div>
+
+  </form>
+
+    <form class="form-horizontal" id="f__2" action="" class="col-sm-10" >
+      <label class="control-label col-sm-##2" for="trl">Trailer status:</label> <!--ll2.loads[0].stops[0].trailerDetails[0].assetOwner  if true it is PO-->
+        <select class="form-control" id="trl__2" name="trl">
+          <option value=0>REQ/PROV</option>
+          <option value="REQUIRED" >REQUIRED</option>  <!--null-->
+          <option value="PROVIDED" >PROVIDED</option> <!--AZNG-->
+        </select>
+      <label class="control-label col-sm-1" for="trip_type">Trip type:</label> <!--ll2.workOpportunityType-->
+        <select class="form-control" id="trip_type__2" name="trip_type">
+          <option value=0>RT/ONE-WAY</option>
+          <option value="ROUND_TRIP" >ROUND_TRIP</option>
+          <option value="ONE_WAY" >ONE_WAY</option>
+        </select>
+        <select class="form-control" id="solo__2" name="solo"> <!--ll2.transitOperatorType-->
+          <option value=0>SOLO/TEAM</option>
+          <option value="SINGLE_DRIVER">SINGLE_DRIVER</option>
+          <option value="TEAM_DRIVER">TEAM_DRIVER</option>
+        </select>
+
+      <label class="control-label col-sm-2" for="origin">Origin:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="origin__2" placeholder="HEBRON, KY" name="origin"> <!--have ready function in multi need to give lon/lat from json and from server json 
+
+
+        [  var server_loc = ll2.loads[0].stops[0].location ; server_loc.latitude ; server_loc.longitude         ]-->
+      <label class="control-label col-sm-1" for="r1">Radius:</label>
+      <!-- need to pass radius as well -->
+        <input type="number" class="form-control" id="r1__2" placeholder="50" name="r1" value=50>
+
+      <label class="control-label col-sm-2" for="destination">Destination:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="destination__2" placeholder="SAN BERNARDINO, CA" name="destination">
+
+        <!-- ll[0].loads[0].stops[ll[0].loads[0].stops.length-1].location  -->
+      <label class="control-label col-sm-1" for="r2" >Radius:</label>
+      <input type="number" class="form-control" id="r2__2" placeholder="50" value=50 name="r2">
+
+      
+
+      <label class="control-label col-sm-1" for="bk">Book:</label>
+        <input type="number" class="form-control" id="bk__2" value=1 name="bk">
+
+        <!--ll2.payout.value-->
+     <label class="control-label col-sm-##2" for="minpay">Payout Min:</label> 
+        <input type="number" class="form-control" id="minpay__2" placeholder="600" value=0 name="minpay">
+
+          <!-- ll2.totalDistanc.value / ll2.payout.value-->
+        <label class="control-label col-sm-2" for="minper">Price/mile:</label>
+        <input type="number" class="form-control" id="minper__2" placeholder="2" value=2 name="minper">
+     <!--  <label class="control-label col-sm-1" for="maxpay">Max:</label>
+        <input type="number" class="form-control" id="maxpay__2" placeholder="12000" value=12000 name="maxpay"> -->
+      <label class="control-label col-sm-##2" for="mindis">Trip distance Min:</label>  <!-- ll2.totalDistanc.value -->
+        <input type="number" class="form-control" id="mindis__2" value=10 name="mindis">  <!-- ll2.totalDistanc.value MIN 0-->
+      <label class="control-label col-sm-1" for="maxdis"> Trip distance Max:</label>
+        <input type="number" class="form-control" id="maxdis__2" value=9999 name="maxdis"> <!-- ll2.totalDistanc.value MAX 99999-->
+      <!-- <label class="control-label col-sm-2" for="minhour">Trip duration Min:</label>
+        <input type="number" class="form-control" id="minhour__2" placeholder="1 hour" name="minhour">
+      <label class="control-label col-sm-1" for="maxhour">Max:</label>
+        <input type="number" class="form-control" id="maxhour__2" placeholder="48 hours" name="maxhour"> -->
+     <!--ll2.startTime-->
+      <label class="control-label col-sm-##2" for="time">Date and time:</label><br><b class="sampleTime"></b>
+        <input type="text" class="form-control time" id="time__2"  name="time"> 
+        <!--ll2.endTime-->
+      <label class="control-label col-sm-1" for="endtime">End by time:</label>
+        <input type="text" class="form-control endtime" id="endtime__2"  name="endtime"> 
+      <!-- <label class="control-label col-sm-2" for="mpty"><input type='checkbox' id='checkbox1'> Empty trailer:</label>
+        <input type="text" class="form-control" id="mpty" placeholder="" name="mpty" > -->
+
+         <!--ll2.stopCount-->
+      <label class="control-label col-sm-1" for="stops">Stops:</label>
+        <input type="number" class="form-control" id="stops__2" value="2" name="stops">
+        <br><label class="col-sm-##2"><input type="checkbox" id="nyichi__2" name="remember"> NY ichi</label>      
+
+   
+
+      <div class="col-sm-offset-2 col-sm-10">
+        <br><button type="button"  id="generate__2" class="btn btn-default">Add</button>
+        <button type="button"  id="remove__2" class="btn btn-default">Remove</button>
+       
+     
+       </div>
+
+  </form>
+
+    <form class="form-horizontal" id="f__3" action="" class="col-sm-10" >
+      <label class="control-label col-sm-##2" for="trl">Trailer status:</label> <!--ll2.loads[0].stops[0].trailerDetails[0].assetOwner  if true it is PO-->
+        <select class="form-control" id="trl__3" name="trl">
+          <option value=0>REQ/PROV</option>
+          <option value="REQUIRED" >REQUIRED</option>  <!--null-->
+          <option value="PROVIDED" >PROVIDED</option> <!--AZNG-->
+        </select>
+      <label class="control-label col-sm-1" for="trip_type">Trip type:</label> <!--ll2.workOpportunityType-->
+        <select class="form-control" id="trip_type__3" name="trip_type">
+          <option value=0>RT/ONE-WAY</option>
+          <option value="ROUND_TRIP" >ROUND_TRIP</option>
+          <option value="ONE_WAY" >ONE_WAY</option>
+        </select>
+        <select class="form-control" id="solo__3" name="solo"> <!--ll2.transitOperatorType-->
+          <option value=0>SOLO/TEAM</option>
+          <option value="SINGLE_DRIVER">SINGLE_DRIVER</option>
+          <option value="TEAM_DRIVER">TEAM_DRIVER</option>
+        </select>
+
+      <label class="control-label col-sm-2" for="origin">Origin:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="origin__3" placeholder="HEBRON, KY" name="origin"> <!--have ready function in multi need to give lon/lat from json and from server json 
+
+
+        [  var server_loc = ll2.loads[0].stops[0].location ; server_loc.latitude ; server_loc.longitude         ]-->
+      <label class="control-label col-sm-1" for="r1">Radius:</label>
+      <!-- need to pass radius as well -->
+        <input type="number" class="form-control" id="r1__3" placeholder="50" name="r1" value=50>
+
+      <label class="control-label col-sm-2" for="destination">Destination:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="destination__3" placeholder="SAN BERNARDINO, CA" name="destination">
+
+        <!-- ll[0].loads[0].stops[ll[0].loads[0].stops.length-1].location  -->
+      <label class="control-label col-sm-1" for="r2" >Radius:</label>
+      <input type="number" class="form-control" id="r2__3" placeholder="50" value=50 name="r2">
+
+      
+
+      <label class="control-label col-sm-1" for="bk">Book:</label>
+        <input type="number" class="form-control" id="bk__3" value=1 name="bk">
+
+        <!--ll2.payout.value-->
+     <label class="control-label col-sm-##2" for="minpay">Payout Min:</label> 
+        <input type="number" class="form-control" id="minpay__3" placeholder="600" value=0 name="minpay">
+
+          <!-- ll2.totalDistanc.value / ll2.payout.value-->
+        <label class="control-label col-sm-2" for="minper">Price/mile:</label>
+        <input type="number" class="form-control" id="minper__3" placeholder="2" value=2 name="minper">
+     <!--  <label class="control-label col-sm-1" for="maxpay">Max:</label>
+        <input type="number" class="form-control" id="maxpay__3" placeholder="12000" value=12000 name="maxpay"> -->
+      <label class="control-label col-sm-##2" for="mindis">Trip distance Min:</label>  <!-- ll2.totalDistanc.value -->
+        <input type="number" class="form-control" id="mindis__3" value=10 name="mindis">  <!-- ll2.totalDistanc.value MIN 0-->
+      <label class="control-label col-sm-1" for="maxdis"> Trip distance Max:</label>
+        <input type="number" class="form-control" id="maxdis__3" value=9999 name="maxdis"> <!-- ll2.totalDistanc.value MAX 99999-->
+      <!-- <label class="control-label col-sm-2" for="minhour">Trip duration Min:</label>
+        <input type="number" class="form-control" id="minhour__3" placeholder="1 hour" name="minhour">
+      <label class="control-label col-sm-1" for="maxhour">Max:</label>
+        <input type="number" class="form-control" id="maxhour__3" placeholder="48 hours" name="maxhour"> -->
+     <!--ll2.startTime-->
+      <label class="control-label col-sm-##2" for="time">Date and time:</label><br><b class="sampleTime"></b>
+        <input type="text" class="form-control time" id="time__3"  name="time"> 
+        <!--ll2.endTime-->
+      <label class="control-label col-sm-1" for="endtime">End by time:</label>
+        <input type="text" class="form-control endtime" id="endtime__3"  name="endtime"> 
+      <!-- <label class="control-label col-sm-2" for="mpty"><input type='checkbox' id='checkbox1'> Empty trailer:</label>
+        <input type="text" class="form-control" id="mpty" placeholder="" name="mpty" > -->
+
+         <!--ll2.stopCount-->
+      <label class="control-label col-sm-1" for="stops">Stops:</label>
+        <input type="number" class="form-control" id="stops__3" value="2" name="stops">
+        <br><label class="col-sm-##2"><input type="checkbox" id="nyichi__3" name="remember"> NY ichi</label>      
+
+   
+
+      <div class="col-sm-offset-2 col-sm-10">
+        <br><button type="button"  id="generate__3" class="btn btn-default">Add</button>
+        <button type="button"  id="remove__3" class="btn btn-default">Remove</button>
+       
+     
+       </div>
+
+  </form>
+
+    <form class="form-horizontal" id="f__4" action="" class="col-sm-10" >
+      <label class="control-label col-sm-##2" for="trl">Trailer status:</label> <!--ll2.loads[0].stops[0].trailerDetails[0].assetOwner  if true it is PO-->
+        <select class="form-control" id="trl__4" name="trl">
+          <option value=0>REQ/PROV</option>
+          <option value="REQUIRED" >REQUIRED</option>  <!--null-->
+          <option value="PROVIDED" >PROVIDED</option> <!--AZNG-->
+        </select>
+      <label class="control-label col-sm-1" for="trip_type">Trip type:</label> <!--ll2.workOpportunityType-->
+        <select class="form-control" id="trip_type__4" name="trip_type">
+          <option value=0>RT/ONE-WAY</option>
+          <option value="ROUND_TRIP" >ROUND_TRIP</option>
+          <option value="ONE_WAY" >ONE_WAY</option>
+        </select>
+        <select class="form-control" id="solo__4" name="solo"> <!--ll2.transitOperatorType-->
+          <option value=0>SOLO/TEAM</option>
+          <option value="SINGLE_DRIVER">SINGLE_DRIVER</option>
+          <option value="TEAM_DRIVER">TEAM_DRIVER</option>
+        </select>
+
+      <label class="control-label col-sm-2" for="origin">Origin:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="origin__4" placeholder="HEBRON, KY" name="origin"> <!--have ready function in multi need to give lon/lat from json and from server json 
+
+
+        [  var server_loc = ll2.loads[0].stops[0].location ; server_loc.latitude ; server_loc.longitude         ]-->
+      <label class="control-label col-sm-1" for="r1">Radius:</label>
+      <!-- need to pass radius as well -->
+        <input type="number" class="form-control" id="r1__4" placeholder="50" name="r1" value=50>
+
+      <label class="control-label col-sm-2" for="destination">Destination:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="destination__4" placeholder="SAN BERNARDINO, CA" name="destination">
+
+        <!-- ll[0].loads[0].stops[ll[0].loads[0].stops.length-1].location  -->
+      <label class="control-label col-sm-1" for="r2" >Radius:</label>
+      <input type="number" class="form-control" id="r2__4" placeholder="50" value=50 name="r2">
+
+      
+
+      <label class="control-label col-sm-1" for="bk">Book:</label>
+        <input type="number" class="form-control" id="bk__4" value=1 name="bk">
+
+        <!--ll2.payout.value-->
+     <label class="control-label col-sm-##2" for="minpay">Payout Min:</label> 
+        <input type="number" class="form-control" id="minpay__4" placeholder="600" value=0 name="minpay">
+
+          <!-- ll2.totalDistanc.value / ll2.payout.value-->
+        <label class="control-label col-sm-2" for="minper">Price/mile:</label>
+        <input type="number" class="form-control" id="minper__4" placeholder="2" value=2 name="minper">
+     <!--  <label class="control-label col-sm-1" for="maxpay">Max:</label>
+        <input type="number" class="form-control" id="maxpay__4" placeholder="12000" value=12000 name="maxpay"> -->
+      <label class="control-label col-sm-##2" for="mindis">Trip distance Min:</label>  <!-- ll2.totalDistanc.value -->
+        <input type="number" class="form-control" id="mindis__4" value=10 name="mindis">  <!-- ll2.totalDistanc.value MIN 0-->
+      <label class="control-label col-sm-1" for="maxdis"> Trip distance Max:</label>
+        <input type="number" class="form-control" id="maxdis__4" value=9999 name="maxdis"> <!-- ll2.totalDistanc.value MAX 99999-->
+      <!-- <label class="control-label col-sm-2" for="minhour">Trip duration Min:</label>
+        <input type="number" class="form-control" id="minhour__4" placeholder="1 hour" name="minhour">
+      <label class="control-label col-sm-1" for="maxhour">Max:</label>
+        <input type="number" class="form-control" id="maxhour__4" placeholder="48 hours" name="maxhour"> -->
+     <!--ll2.startTime-->
+      <label class="control-label col-sm-##2" for="time">Date and time:</label><br><b class="sampleTime"></b>
+        <input type="text" class="form-control time" id="time__4"  name="time"> 
+        <!--ll2.endTime-->
+      <label class="control-label col-sm-1" for="endtime">End by time:</label>
+        <input type="text" class="form-control endtime" id="endtime__4"  name="endtime"> 
+      <!-- <label class="control-label col-sm-2" for="mpty"><input type='checkbox' id='checkbox1'> Empty trailer:</label>
+        <input type="text" class="form-control" id="mpty" placeholder="" name="mpty" > -->
+
+         <!--ll2.stopCount-->
+      <label class="control-label col-sm-1" for="stops">Stops:</label>
+        <input type="number" class="form-control" id="stops__4" value="2" name="stops">
+        <br><label class="col-sm-##2"><input type="checkbox" id="nyichi__4" name="remember"> NY ichi</label>      
+
+   
+
+      <div class="col-sm-offset-2 col-sm-10">
+        <br><button type="button"  id="generate__4" class="btn btn-default">Add</button>
+        <button type="button"  id="remove__4" class="btn btn-default">Remove</button>
+       
+     
+       </div>
+
+  </form>
+
+    <form class="form-horizontal" id="f__5" action="" class="col-sm-10" >
+      <label class="control-label col-sm-##2" for="trl">Trailer status:</label> <!--ll2.loads[0].stops[0].trailerDetails[0].assetOwner  if true it is PO-->
+        <select class="form-control" id="trl__5" name="trl">
+          <option value=0>REQ/PROV</option>
+          <option value="REQUIRED" >REQUIRED</option>  <!--null-->
+          <option value="PROVIDED" >PROVIDED</option> <!--AZNG-->
+        </select>
+      <label class="control-label col-sm-1" for="trip_type">Trip type:</label> <!--ll2.workOpportunityType-->
+        <select class="form-control" id="trip_type__5" name="trip_type">
+          <option value=0>RT/ONE-WAY</option>
+          <option value="ROUND_TRIP" >ROUND_TRIP</option>
+          <option value="ONE_WAY" >ONE_WAY</option>
+        </select>
+        <select class="form-control" id="solo__5" name="solo"> <!--ll2.transitOperatorType-->
+          <option value=0>SOLO/TEAM</option>
+          <option value="SINGLE_DRIVER">SINGLE_DRIVER</option>
+          <option value="TEAM_DRIVER">TEAM_DRIVER</option>
+        </select>
+
+      <label class="control-label col-sm-2" for="origin">Origin:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="origin__5" placeholder="HEBRON, KY" name="origin"> <!--have ready function in multi need to give lon/lat from json and from server json 
+
+
+        [  var server_loc = ll2.loads[0].stops[0].location ; server_loc.latitude ; server_loc.longitude         ]-->
+      <label class="control-label col-sm-1" for="r1">Radius:</label>
+      <!-- need to pass radius as well -->
+        <input type="number" class="form-control" id="r1__5" placeholder="50" name="r1" value=50>
+
+      <label class="control-label col-sm-2" for="destination">Destination:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="destination__5" placeholder="SAN BERNARDINO, CA" name="destination">
+
+        <!-- ll[0].loads[0].stops[ll[0].loads[0].stops.length-1].location  -->
+      <label class="control-label col-sm-1" for="r2" >Radius:</label>
+      <input type="number" class="form-control" id="r2__5" placeholder="50" value=50 name="r2">
+
+      
+
+      <label class="control-label col-sm-1" for="bk">Book:</label>
+        <input type="number" class="form-control" id="bk__5" value=1 name="bk">
+
+        <!--ll2.payout.value-->
+     <label class="control-label col-sm-##2" for="minpay">Payout Min:</label> 
+        <input type="number" class="form-control" id="minpay__5" placeholder="600" value=0 name="minpay">
+
+          <!-- ll2.totalDistanc.value / ll2.payout.value-->
+        <label class="control-label col-sm-2" for="minper">Price/mile:</label>
+        <input type="number" class="form-control" id="minper__5" placeholder="2" value=2 name="minper">
+     <!--  <label class="control-label col-sm-1" for="maxpay">Max:</label>
+        <input type="number" class="form-control" id="maxpay__5" placeholder="12000" value=12000 name="maxpay"> -->
+      <label class="control-label col-sm-##2" for="mindis">Trip distance Min:</label>  <!-- ll2.totalDistanc.value -->
+        <input type="number" class="form-control" id="mindis__5" value=10 name="mindis">  <!-- ll2.totalDistanc.value MIN 0-->
+      <label class="control-label col-sm-1" for="maxdis"> Trip distance Max:</label>
+        <input type="number" class="form-control" id="maxdis__5" value=9999 name="maxdis"> <!-- ll2.totalDistanc.value MAX 99999-->
+      <!-- <label class="control-label col-sm-2" for="minhour">Trip duration Min:</label>
+        <input type="number" class="form-control" id="minhour__5" placeholder="1 hour" name="minhour">
+      <label class="control-label col-sm-1" for="maxhour">Max:</label>
+        <input type="number" class="form-control" id="maxhour__5" placeholder="48 hours" name="maxhour"> -->
+     <!--ll2.startTime-->
+      <label class="control-label col-sm-##2" for="time">Date and time:</label><br><b class="sampleTime"></b>
+        <input type="text" class="form-control time" id="time__5"  name="time"> 
+        <!--ll2.endTime-->
+      <label class="control-label col-sm-1" for="endtime">End by time:</label>
+        <input type="text" class="form-control endtime" id="endtime__5"  name="endtime"> 
+      <!-- <label class="control-label col-sm-2" for="mpty"><input type='checkbox' id='checkbox1'> Empty trailer:</label>
+        <input type="text" class="form-control" id="mpty" placeholder="" name="mpty" > -->
+
+         <!--ll2.stopCount-->
+      <label class="control-label col-sm-1" for="stops">Stops:</label>
+        <input type="number" class="form-control" id="stops__5" value="2" name="stops">
+        <br><label class="col-sm-##2"><input type="checkbox" id="nyichi__5" name="remember"> NY ichi</label>      
+
+   
+
+      <div class="col-sm-offset-2 col-sm-10">
+        <br><button type="button"  id="generate__5" class="btn btn-default">Add</button>
+        <button type="button"  id="remove__5" class="btn btn-default">Remove</button>
+       
+     
+       </div>
+
+  </form>
+
+    <form class="form-horizontal" id="f__6" action="" class="col-sm-10" >
+      <label class="control-label col-sm-##2" for="trl">Trailer status:</label> <!--ll2.loads[0].stops[0].trailerDetails[0].assetOwner  if true it is PO-->
+        <select class="form-control" id="trl__6" name="trl">
+          <option value=0>REQ/PROV</option>
+          <option value="REQUIRED" >REQUIRED</option>  <!--null-->
+          <option value="PROVIDED" >PROVIDED</option> <!--AZNG-->
+        </select>
+      <label class="control-label col-sm-1" for="trip_type">Trip type:</label> <!--ll2.workOpportunityType-->
+        <select class="form-control" id="trip_type__6" name="trip_type">
+          <option value=0>RT/ONE-WAY</option>
+          <option value="ROUND_TRIP" >ROUND_TRIP</option>
+          <option value="ONE_WAY" >ONE_WAY</option>
+        </select>
+        <select class="form-control" id="solo__6" name="solo"> <!--ll2.transitOperatorType-->
+          <option value=0>SOLO/TEAM</option>
+          <option value="SINGLE_DRIVER">SINGLE_DRIVER</option>
+          <option value="TEAM_DRIVER">TEAM_DRIVER</option>
+        </select>
+
+      <label class="control-label col-sm-2" for="origin">Origin:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="origin__6" placeholder="HEBRON, KY" name="origin"> <!--have ready function in multi need to give lon/lat from json and from server json 
+
+
+        [  var server_loc = ll2.loads[0].stops[0].location ; server_loc.latitude ; server_loc.longitude         ]-->
+      <label class="control-label col-sm-1" for="r1">Radius:</label>
+      <!-- need to pass radius as well -->
+        <input type="number" class="form-control" id="r1__6" placeholder="50" name="r1" value=50>
+
+      <label class="control-label col-sm-2" for="destination">Destination:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="destination__6" placeholder="SAN BERNARDINO, CA" name="destination">
+
+        <!-- ll[0].loads[0].stops[ll[0].loads[0].stops.length-1].location  -->
+      <label class="control-label col-sm-1" for="r2" >Radius:</label>
+      <input type="number" class="form-control" id="r2__6" placeholder="50" value=50 name="r2">
+
+      
+
+      <label class="control-label col-sm-1" for="bk">Book:</label>
+        <input type="number" class="form-control" id="bk__6" value=1 name="bk">
+
+        <!--ll2.payout.value-->
+     <label class="control-label col-sm-##2" for="minpay">Payout Min:</label> 
+        <input type="number" class="form-control" id="minpay__6" placeholder="600" value=0 name="minpay">
+
+          <!-- ll2.totalDistanc.value / ll2.payout.value-->
+        <label class="control-label col-sm-2" for="minper">Price/mile:</label>
+        <input type="number" class="form-control" id="minper__6" placeholder="2" value=2 name="minper">
+     <!--  <label class="control-label col-sm-1" for="maxpay">Max:</label>
+        <input type="number" class="form-control" id="maxpay__6" placeholder="12000" value=12000 name="maxpay"> -->
+      <label class="control-label col-sm-##2" for="mindis">Trip distance Min:</label>  <!-- ll2.totalDistanc.value -->
+        <input type="number" class="form-control" id="mindis__6" value=10 name="mindis">  <!-- ll2.totalDistanc.value MIN 0-->
+      <label class="control-label col-sm-1" for="maxdis"> Trip distance Max:</label>
+        <input type="number" class="form-control" id="maxdis__6" value=9999 name="maxdis"> <!-- ll2.totalDistanc.value MAX 99999-->
+      <!-- <label class="control-label col-sm-2" for="minhour">Trip duration Min:</label>
+        <input type="number" class="form-control" id="minhour__6" placeholder="1 hour" name="minhour">
+      <label class="control-label col-sm-1" for="maxhour">Max:</label>
+        <input type="number" class="form-control" id="maxhour__6" placeholder="48 hours" name="maxhour"> -->
+     <!--ll2.startTime-->
+      <label class="control-label col-sm-##2" for="time">Date and time:</label><br><b class="sampleTime"></b>
+        <input type="text" class="form-control time" id="time__6"  name="time"> 
+        <!--ll2.endTime-->
+      <label class="control-label col-sm-1" for="endtime">End by time:</label>
+        <input type="text" class="form-control endtime" id="endtime__6"  name="endtime"> 
+      <!-- <label class="control-label col-sm-2" for="mpty"><input type='checkbox' id='checkbox1'> Empty trailer:</label>
+        <input type="text" class="form-control" id="mpty" placeholder="" name="mpty" > -->
+
+         <!--ll2.stopCount-->
+      <label class="control-label col-sm-1" for="stops">Stops:</label>
+        <input type="number" class="form-control" id="stops__6" value="2" name="stops">
+        <br><label class="col-sm-##2"><input type="checkbox" id="nyichi__6" name="remember"> NY ichi</label>      
+
+   
+
+      <div class="col-sm-offset-2 col-sm-10">
+        <br><button type="button"  id="generate__6" class="btn btn-default">Add</button>
+        <button type="button"  id="remove__6" class="btn btn-default">Remove</button>
+       
+     
+       </div>
+
+  </form>
+
+    <form class="form-horizontal" id="f__7" action="" class="col-sm-10" >
+      <label class="control-label col-sm-##2" for="trl">Trailer status:</label> <!--ll2.loads[0].stops[0].trailerDetails[0].assetOwner  if true it is PO-->
+        <select class="form-control" id="trl__7" name="trl">
+          <option value=0>REQ/PROV</option>
+          <option value="REQUIRED" >REQUIRED</option>  <!--null-->
+          <option value="PROVIDED" >PROVIDED</option> <!--AZNG-->
+        </select>
+      <label class="control-label col-sm-1" for="trip_type">Trip type:</label> <!--ll2.workOpportunityType-->
+        <select class="form-control" id="trip_type__7" name="trip_type">
+          <option value=0>RT/ONE-WAY</option>
+          <option value="ROUND_TRIP" >ROUND_TRIP</option>
+          <option value="ONE_WAY" >ONE_WAY</option>
+        </select>
+        <select class="form-control" id="solo__7" name="solo"> <!--ll2.transitOperatorType-->
+          <option value=0>SOLO/TEAM</option>
+          <option value="SINGLE_DRIVER">SINGLE_DRIVER</option>
+          <option value="TEAM_DRIVER">TEAM_DRIVER</option>
+        </select>
+
+      <label class="control-label col-sm-2" for="origin">Origin:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="origin__7" placeholder="HEBRON, KY" name="origin"> <!--have ready function in multi need to give lon/lat from json and from server json 
+
+
+        [  var server_loc = ll2.loads[0].stops[0].location ; server_loc.latitude ; server_loc.longitude         ]-->
+      <label class="control-label col-sm-1" for="r1">Radius:</label>
+      <!-- need to pass radius as well -->
+        <input type="number" class="form-control" id="r1__7" placeholder="50" name="r1" value=50>
+
+      <label class="control-label col-sm-2" for="destination">Destination:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="destination__7" placeholder="SAN BERNARDINO, CA" name="destination">
+
+        <!-- ll[0].loads[0].stops[ll[0].loads[0].stops.length-1].location  -->
+      <label class="control-label col-sm-1" for="r2" >Radius:</label>
+      <input type="number" class="form-control" id="r2__7" placeholder="50" value=50 name="r2">
+
+      
+
+      <label class="control-label col-sm-1" for="bk">Book:</label>
+        <input type="number" class="form-control" id="bk__7" value=1 name="bk">
+
+        <!--ll2.payout.value-->
+     <label class="control-label col-sm-##2" for="minpay">Payout Min:</label> 
+        <input type="number" class="form-control" id="minpay__7" placeholder="600" value=0 name="minpay">
+
+          <!-- ll2.totalDistanc.value / ll2.payout.value-->
+        <label class="control-label col-sm-2" for="minper">Price/mile:</label>
+        <input type="number" class="form-control" id="minper__7" placeholder="2" value=2 name="minper">
+     <!--  <label class="control-label col-sm-1" for="maxpay">Max:</label>
+        <input type="number" class="form-control" id="maxpay__7" placeholder="12000" value=12000 name="maxpay"> -->
+      <label class="control-label col-sm-##2" for="mindis">Trip distance Min:</label>  <!-- ll2.totalDistanc.value -->
+        <input type="number" class="form-control" id="mindis__7" value=10 name="mindis">  <!-- ll2.totalDistanc.value MIN 0-->
+      <label class="control-label col-sm-1" for="maxdis"> Trip distance Max:</label>
+        <input type="number" class="form-control" id="maxdis__7" value=9999 name="maxdis"> <!-- ll2.totalDistanc.value MAX 99999-->
+      <!-- <label class="control-label col-sm-2" for="minhour">Trip duration Min:</label>
+        <input type="number" class="form-control" id="minhour__7" placeholder="1 hour" name="minhour">
+      <label class="control-label col-sm-1" for="maxhour">Max:</label>
+        <input type="number" class="form-control" id="maxhour__7" placeholder="48 hours" name="maxhour"> -->
+     <!--ll2.startTime-->
+      <label class="control-label col-sm-##2" for="time">Date and time:</label><br><b class="sampleTime"></b>
+        <input type="text" class="form-control time" id="time__7"  name="time"> 
+        <!--ll2.endTime-->
+      <label class="control-label col-sm-1" for="endtime">End by time:</label>
+        <input type="text" class="form-control endtime" id="endtime__7"  name="endtime"> 
+      <!-- <label class="control-label col-sm-2" for="mpty"><input type='checkbox' id='checkbox1'> Empty trailer:</label>
+        <input type="text" class="form-control" id="mpty" placeholder="" name="mpty" > -->
+
+         <!--ll2.stopCount-->
+      <label class="control-label col-sm-1" for="stops">Stops:</label>
+        <input type="number" class="form-control" id="stops__7" value="2" name="stops">
+        <br><label class="col-sm-##2"><input type="checkbox" id="nyichi__7" name="remember"> NY ichi</label>      
+
+   
+
+      <div class="col-sm-offset-2 col-sm-10">
+        <br><button type="button"  id="generate__7" class="btn btn-default">Add</button>
+        <button type="button"  id="remove__7" class="btn btn-default">Remove</button>
+       
+     
+       </div>
+
+  </form>
+  <form class="form-horizontal" id="f__8" action="" class="col-sm-10" >
+      <label class="control-label col-sm-##2" for="trl">Trailer status:</label> <!--ll2.loads[0].stops[0].trailerDetails[0].assetOwner  if true it is PO-->
+        <select class="form-control" id="trl__8" name="trl">
+          <option value=0>REQ/PROV</option>
+          <option value="REQUIRED" >REQUIRED</option>  <!--null-->
+          <option value="PROVIDED" >PROVIDED</option> <!--AZNG-->
+        </select>
+      <label class="control-label col-sm-1" for="trip_type">Trip type:</label> <!--ll2.workOpportunityType-->
+        <select class="form-control" id="trip_type__8" name="trip_type">
+          <option value=0>RT/ONE-WAY</option>
+          <option value="ROUND_TRIP" >ROUND_TRIP</option>
+          <option value="ONE_WAY" >ONE_WAY</option>
+        </select>
+        <select class="form-control" id="solo__8" name="solo"> <!--ll2.transitOperatorType-->
+          <option value=0>SOLO/TEAM</option>
+          <option value="SINGLE_DRIVER">SINGLE_DRIVER</option>
+          <option value="TEAM_DRIVER">TEAM_DRIVER</option>
+        </select>
+
+      <label class="control-label col-sm-2" for="origin">Origin:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="origin__8" placeholder="HEBRON, KY" name="origin"> <!--have ready function in multi need to give lon/lat from json and from server json 
+
+
+        [  var server_loc = ll2.loads[0].stops[0].location ; server_loc.latitude ; server_loc.longitude         ]-->
+      <label class="control-label col-sm-1" for="r1">Radius:</label>
+      <!-- need to pass radius as well -->
+        <input type="number" class="form-control" id="r1__8" placeholder="50" name="r1" value=50>
+
+      <label class="control-label col-sm-2" for="destination">Destination:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="destination__8" placeholder="SAN BERNARDINO, CA" name="destination">
+
+        <!-- ll[0].loads[0].stops[ll[0].loads[0].stops.length-1].location  -->
+      <label class="control-label col-sm-1" for="r2" >Radius:</label>
+      <input type="number" class="form-control" id="r2__8" placeholder="50" value=50 name="r2">
+
+      
+
+      <label class="control-label col-sm-1" for="bk">Book:</label>
+        <input type="number" class="form-control" id="bk__8" value=1 name="bk">
+
+        <!--ll2.payout.value-->
+     <label class="control-label col-sm-##2" for="minpay">Payout Min:</label> 
+        <input type="number" class="form-control" id="minpay__8" placeholder="600" value=0 name="minpay">
+
+          <!-- ll2.totalDistanc.value / ll2.payout.value-->
+        <label class="control-label col-sm-2" for="minper">Price/mile:</label>
+        <input type="number" class="form-control" id="minper__8" placeholder="2" value=2 name="minper">
+     <!--  <label class="control-label col-sm-1" for="maxpay">Max:</label>
+        <input type="number" class="form-control" id="maxpay__8" placeholder="12000" value=12000 name="maxpay"> -->
+      <label class="control-label col-sm-##2" for="mindis">Trip distance Min:</label>  <!-- ll2.totalDistanc.value -->
+        <input type="number" class="form-control" id="mindis__8" value=10 name="mindis">  <!-- ll2.totalDistanc.value MIN 0-->
+      <label class="control-label col-sm-1" for="maxdis"> Trip distance Max:</label>
+        <input type="number" class="form-control" id="maxdis__8" value=9999 name="maxdis"> <!-- ll2.totalDistanc.value MAX 99999-->
+      <!-- <label class="control-label col-sm-2" for="minhour">Trip duration Min:</label>
+        <input type="number" class="form-control" id="minhour__8" placeholder="1 hour" name="minhour">
+      <label class="control-label col-sm-1" for="maxhour">Max:</label>
+        <input type="number" class="form-control" id="maxhour__8" placeholder="48 hours" name="maxhour"> -->
+     <!--ll2.startTime-->
+      <label class="control-label col-sm-##2" for="time">Date and time:</label><br><b class="sampleTime"></b>
+        <input type="text" class="form-control time" id="time__8"  name="time"> 
+        <!--ll2.endTime-->
+      <label class="control-label col-sm-1" for="endtime">End by time:</label>
+        <input type="text" class="form-control endtime" id="endtime__8"  name="endtime"> 
+      <!-- <label class="control-label col-sm-2" for="mpty"><input type='checkbox' id='checkbox1'> Empty trailer:</label>
+        <input type="text" class="form-control" id="mpty" placeholder="" name="mpty" > -->
+
+         <!--ll2.stopCount-->
+      <label class="control-label col-sm-1" for="stops">Stops:</label>
+        <input type="number" class="form-control" id="stops__8" value="2" name="stops">
+        <br><label class="col-sm-##2"><input type="checkbox" id="nyichi__8" name="remember"> NY ichi</label>      
+
+   
+
+      <div class="col-sm-offset-2 col-sm-10">
+        <br><button type="button"  id="generate__8" class="btn btn-default">Add</button>
+        <button type="button"  id="remove__8" class="btn btn-default">Remove</button>
+       
+     
+       </div>
+
+  </form>
+
+    <form class="form-horizontal" id="f__9" action="" class="col-sm-10" >
+      <label class="control-label col-sm-##2" for="trl">Trailer status:</label> <!--ll2.loads[0].stops[0].trailerDetails[0].assetOwner  if true it is PO-->
+        <select class="form-control" id="trl__9" name="trl">
+          <option value=0>REQ/PROV</option>
+          <option value="REQUIRED" >REQUIRED</option>  <!--null-->
+          <option value="PROVIDED" >PROVIDED</option> <!--AZNG-->
+        </select>
+      <label class="control-label col-sm-1" for="trip_type">Trip type:</label> <!--ll2.workOpportunityType-->
+        <select class="form-control" id="trip_type__9" name="trip_type">
+          <option value=0>RT/ONE-WAY</option>
+          <option value="ROUND_TRIP" >ROUND_TRIP</option>
+          <option value="ONE_WAY" >ONE_WAY</option>
+        </select>
+        <select class="form-control" id="solo__9" name="solo"> <!--ll2.transitOperatorType-->
+          <option value=0>SOLO/TEAM</option>
+          <option value="SINGLE_DRIVER">SINGLE_DRIVER</option>
+          <option value="TEAM_DRIVER">TEAM_DRIVER</option>
+        </select>
+
+      <label class="control-label col-sm-2" for="origin">Origin:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="origin__9" placeholder="HEBRON, KY" name="origin"> <!--have ready function in multi need to give lon/lat from json and from server json 
+
+
+        [  var server_loc = ll2.loads[0].stops[0].location ; server_loc.latitude ; server_loc.longitude         ]-->
+      <label class="control-label col-sm-1" for="r1">Radius:</label>
+      <!-- need to pass radius as well -->
+        <input type="number" class="form-control" id="r1__9" placeholder="50" name="r1" value=50>
+
+      <label class="control-label col-sm-2" for="destination">Destination:</label>
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="destination__9" placeholder="SAN BERNARDINO, CA" name="destination">
+
+        <!-- ll[0].loads[0].stops[ll[0].loads[0].stops.length-1].location  -->
+      <label class="control-label col-sm-1" for="r2" >Radius:</label>
+      <input type="number" class="form-control" id="r2__9" placeholder="50" value=50 name="r2">
+
+      
+
+      <label class="control-label col-sm-1" for="bk">Book:</label>
+        <input type="number" class="form-control" id="bk__9" value=1 name="bk">
+
+        <!--ll2.payout.value-->
+     <label class="control-label col-sm-##2" for="minpay">Payout Min:</label> 
+        <input type="number" class="form-control" id="minpay__9" placeholder="600" value=0 name="minpay">
+
+          <!-- ll2.totalDistanc.value / ll2.payout.value-->
+        <label class="control-label col-sm-2" for="minper">Price/mile:</label>
+        <input type="number" class="form-control" id="minper__9" placeholder="2" value=2 name="minper">
+     <!--  <label class="control-label col-sm-1" for="maxpay">Max:</label>
+        <input type="number" class="form-control" id="maxpay__9" placeholder="12000" value=12000 name="maxpay"> -->
+      <label class="control-label col-sm-##2" for="mindis">Trip distance Min:</label>  <!-- ll2.totalDistanc.value -->
+        <input type="number" class="form-control" id="mindis__9" value=10 name="mindis">  <!-- ll2.totalDistanc.value MIN 0-->
+      <label class="control-label col-sm-1" for="maxdis"> Trip distance Max:</label>
+        <input type="number" class="form-control" id="maxdis__9" value=9999 name="maxdis"> <!-- ll2.totalDistanc.value MAX 99999-->
+      <!-- <label class="control-label col-sm-2" for="minhour">Trip duration Min:</label>
+        <input type="number" class="form-control" id="minhour__9" placeholder="1 hour" name="minhour">
+      <label class="control-label col-sm-1" for="maxhour">Max:</label>
+        <input type="number" class="form-control" id="maxhour__9" placeholder="48 hours" name="maxhour"> -->
+     <!--ll2.startTime-->
+      <label class="control-label col-sm-##2" for="time">Date and time:</label><br><b class="sampleTime"></b>
+        <input type="text" class="form-control time" id="time__9"  name="time"> 
+        <!--ll2.endTime-->
+      <label class="control-label col-sm-1" for="endtime">End by time:</label>
+        <input type="text" class="form-control endtime" id="endtime__9"  name="endtime"> 
+      <!-- <label class="control-label col-sm-2" for="mpty"><input type='checkbox' id='checkbox1'> Empty trailer:</label>
+        <input type="text" class="form-control" id="mpty" placeholder="" name="mpty" > -->
+
+         <!--ll2.stopCount-->
+      <label class="control-label col-sm-1" for="stops">Stops:</label>
+        <input type="number" class="form-control" id="stops__9" value="2" name="stops">
+        <br><label class="col-sm-##2"><input type="checkbox" id="nyichi__9" name="remember"> NY ichi</label>      
+
+   
+
+      <div class="col-sm-offset-2 col-sm-10">
+        <br><button type="button"  id="generate__9" class="btn btn-default">Add</button>
+        <button type="button"  id="remove__9" class="btn btn-default">Remove</button>
+       
+     
+       </div>
+
+  </form>
+
+
+   <label class="control-label col-sm-2" for="blck">Blacklist:</label>
+      <div class="col-sm-10" id="chck"> 
+    </div>
+    <br> <br> <br>
+    <div style="width: 50%; display: inline-block;">
+        <label class="control-label" for="gminpay">General payout min:</label> <br>
+        <input type="number" class="form-control" id="gminpay" placeholder="50" min="50" step="1"  value=5000 name="gminpay">
+   </div>
+   <div style="width: 49%;  display: inline-block;">
+        <label class="control-label" for="gminper">General price/mile:</label> <br>
+        <input type="number" class="form-control" id="gminper" placeholder="1" value=3 min="0" step="1" name="gminper">
+   </div>
+    <br>
+    <br>
+    <br>
+     <button type="button" style="width: 100%" id="copy" class="btn btn-default">Copy</button>
+       <div class="form-group" >
+       <br>
+    <br>
+    <br>
+      <div class="col-sm-12">
+        <textarea type="textarea" spellcheck="false"  wrap="hard" style="height: 350px;" class="form-control" style="white-space: pre-wrap;" value="" id="myInput"></textarea> 
+       
+      </div>
+     
+    </div>
+</div>
+    <!-- <div style="opacity: 0;"> <input type="text" value="Hello World" id="myInput"></div> -->
+<script type="text/javascript">
+
+
+var dt=new Date();
+var y=dt.getFullYear();
+var m=dt.getMonth()+1; m=(m/10>=1)? m:"0"+m;
+var d=dt.getDate(); d=(d/10>=1)? d:"0"+d;
+
+var h=dt.getHours(); h=(h/10>=1)? h:"0"+h;
+var mn=dt.getMinutes(); mn=(mn/10>=1)? mn:"0"+mn;
+var s=dt.getSeconds(); s=(s/10>=1)? s:"0"+s;
+
+  $('#mpty').val(y+"-"+m+"-"+d+"T"+h+":"+mn+":"+s);
+  $('.sampleTime').text(y+"-"+m+"-"+d+"T"+h+":"+mn+":"+s);
+  //$('.endtime').val(y+"-"+m+"-"+(Number(d)+1)+"T"+h+":"+mn+":"+s);
+  //$('#mpty').placeholder(y+"-"+m+"-"+d+"T"+h+":"+mn+":"+s);
+  //add options to sellect
+  $.each(states, function(key, value) {   
+     $('#chck')
+         .append($("<label class='col-sm-2'><input class='cts' type='checkbox' lat="+stwzip[value.st].zipMin+" lon="+stwzip[value.st].zipMax+" name='"+value.st+"'> "+value.st+"</label>")); //<label class='col-sm-2'><input type='checkbox' name='"+value.st+"'> "+value.st+"</label>
+                  //  .attr("value",key)//.attr("lon",value.lon)
+                   // .text(value.city+", "+ value.state)); 
+});
+$("#mptycover").css('visibility', 'hidden');
+
+ $(document).find('#checkbox1').change(function() {
+        if(this.checked) {
+          
+          $("#mptycover").css('visibility', 'visible');
+        }
+        else{
+          $("#mptycover").css('visibility', 'hidden');
+        }     
+    });
+ $('[id^="minpay__"]').css('display', 'none');
+  $('[id^="minper__"]').css('display', 'none');
+   $('[id^="mindis__"]').css('display', 'none');
+    $('[id^="maxdis__"]').css('display', 'none');
+     $('[id^="endtime__"]').css('display', 'none');
+      $('[id^="stops__"]').css('display', 'none');
+       $('[id^="solo__"]').css('display', 'none');
+        $('[id^="trip_type__"]').css('display', 'none');
+          $('[id^="endtime__"]').css('display', 'none');
+            $('[id^="trl__"]').css('display', 'none');
+             $('[id^="time__"]').css('display', 'none');
+ $('[for^="minpay"]').css('display', 'none');             
+ $('[id^="bk__"]').css('display', 'none');
+ $('[for^="bk"]').css('display', 'none');
+  $('[for^="minper"]').css('display', 'none');
+   $('[for^="mindis"]').css('display', 'none');
+    $('[for^="maxdis"]').css('display', 'none');
+     $('[for^="endtime"]').css('display', 'none');
+      $('[for^="stops"]').css('display', 'none');
+       $('[for^="solo"]').css('display', 'none');
+        $('[for^="trip_type"]').css('display', 'none');
+          $('[for^="endtime"]').css('display', 'none');
+            $('[for^="trl"]').css('display', 'none');
+             $('[for^="time"]').css('display', 'none');
+
+$('[for^="blck"]').css('display', 'none');
+ $(".sampleTime").css('display', 'none'); 
+ $('[class^="col-sm-##2"]').css('display', 'none');
+
+ $("#chck").css('display', 'none');  
+// $("#minpay__").css
+// $('div[id^="generate"]')
+//     var puTime = getTime("#time__"+index);
+//     var delLon =Number( ($("#destination__"+index).attr('lon'))?$("#destination__"+index).attr('lon'):0);
+//     var delLat = Number(($("#destination__"+index).attr('lat'))?$("#destination__"+index).attr('lat'):0);
+//     var delTime = getTime("#endtime__"+index);
+//     var trlStat = $("#trl__"+index).val();       //0 - po 1 - req 2 - any
+//     var tripType = $("#trip_type__"+index).val();     //0 - rt 1 - one way 2 - any
+//     var isTeam = $("#solo__"+index).val();         //0 - solo 1 - team 2 - any
+//     var payOut = Number($("#minpay__"+index).val()); 
+//     var perMile = Number($("#minper__"+index).val()); 
+//     var minDis =Number( $("#mindis__"+index).val()); 
+//     var maxDis =Number( $("#maxdis__"+index).val()); 
+//     var puRad = Number($("#r1__"+index).val()); 
+//     var delRad = Number($("#r2__"+index).val()); 
+//     var stopsCount = Number($("#stops__"+index).val());
+//     var nyIchi = ( $("#nyichi__"+index).is(':checked'))? 1 : 0;
+//     var puName = ($("#origin__"+index).attr('citiname'))?$("#origin__"+index).attr('citiname'):0;
+//     var delName = ($("#destination__"+index).attr('citiname'))?$("#destination__"+index).attr('citiname'):0;
+</script>
+
+
+
+<script src="newfncts.js"></script>
+ <script src="addJSON.js"></script>
+</body>
+</html>

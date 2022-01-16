@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Filter</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css" rel="stylesheet" />
+
+   <script src="locs.js"></script>
+   <script src="fncts.js"></script>
+</head>
+<body>
+
+<div class="container">
+   <h2>Filters [har safar qo'yishdan oldin obnovit qilish kere]</h2>
+  <form class="form-horizontal" action="">
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="trl">Trailer status:</label>
+      <div class="col-sm-3">          
+        <select class="form-control" id="trl" name="trl">
+          <option value="NONE">REQUIRED/PROVIDED</option>
+          <option value="REQUIRED" >REQUIRED</option>
+          <option value="PROVIDED" >PROVIDED</option>
+        </select>
+      </div>
+      <label class="control-label col-sm-1" for="trip_type">Trip type:</label>
+      <div class="col-sm-3">          
+        <select class="form-control" id="trip_type" name="trip_type">
+          <option value="NONE">ROUNTRIP/ONE-WAY</option>
+          <option value="ROUND_TRIP" >ROUNTRIP</option>
+          <option value="ONE_WAY" >ONE-WAY</option>
+        </select>
+      </div>
+      <!-- <label class="control-label col-sm-1" for="solo">Trip type:</label> -->
+      <div class="col-sm-3">          
+        <select class="form-control" id="solo" name="solo">
+          <option value="NONE">SOLO/TEAM</option>
+          <option value="SINGLE_DRIVER">SOLO</option>
+          <option value="TEAM_DRIVER">TEAM</option>
+        </select>
+      </div>
+    </div>
+<br><br>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="origin">Origin:</label>
+      <div class="col-sm-5">
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="origin" placeholder="HEBRON, KY" name="origin">
+      </div>
+      <label class="control-label col-sm-1" for="r1">Radius:</label>
+      <div class="col-sm-4">
+        <input type="number" class="form-control" id="r1" placeholder="50" name="r1" value=50>
+      </div>
+    </div>
+
+    <div class="form-group" id="dstcover">
+      <label class="control-label col-sm-2" for="destination">Destination:</label>
+      <div class="col-sm-5">
+        <input type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" id="destination" placeholder="SAN BERNARDINO, CA" name="destination">
+      </div>
+      <label class="control-label col-sm-1" for="r2" >Radius:</label>
+      <div class="col-sm-4">
+        <input type="number" class="form-control" id="r2" placeholder="50" value=50 name="r2">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="minper">Price/mile:</label>
+      <div class="col-sm-5">
+        <input type="number" class="form-control" id="minper" placeholder="2" value=2 name="minper">
+      </div>
+      <label class="control-label col-sm-1" for="bk">Book:</label>
+      <div class="col-sm-4">          
+        <input type="number" class="form-control" id="bk" value=1 name="bk">
+      </div>
+    </div>
+<br><br>
+     <div class="form-group">
+      <label class="control-label col-sm-2" for="minpay">Payout Min:</label>
+      <div class="col-sm-5">
+        <input type="number" class="form-control" id="minpay" placeholder="600" value=0 name="minpay">
+      </div>
+      <label class="control-label col-sm-1" for="maxpay">Max:</label>
+      <div class="col-sm-4">
+        <input type="number" class="form-control" id="maxpay" placeholder="12000" value=12000 name="maxpay">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="mindis">Trip distance Min:</label>
+      <div class="col-sm-5">
+        <input type="number" class="form-control" id="mindis" placeholder="100 miles" name="mindis">
+      </div>
+      <label class="control-label col-sm-1" for="maxdis">Max:</label>
+      <div class="col-sm-4">
+        <input type="number" class="form-control" id="maxdis" placeholder="700 miles" name="maxdis">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="minhour">Trip duration Min:</label>
+      <div class="col-sm-5">
+        <input type="number" class="form-control" id="minhour" placeholder="1 hour" name="minhour">
+      </div>
+      <label class="control-label col-sm-1" for="maxhour">Max:</label>
+      <div class="col-sm-4">
+        <input type="number" class="form-control" id="maxhour" placeholder="48 hours" name="maxhour">
+      </div>
+    </div>
+<br><br>
+    <!-- <div class="form-group">
+      <label class="control-label col-sm-2" for="tsrl">Trailer status:</label>
+      <div class="col-sm-5">          
+        <select class="form-control" id="trl" name="trl">
+          <option value="NONE">Any</option>
+          <option value="REQUIRED" >REQUIRED</option>
+          <option value="PROVIDED" >PROVIDED</option>
+        </select>
+      </div>
+      <label class="control-label col-sm-1" for="trip_type">Trip type:</label>
+      <div class="col-sm-4">          
+        <select class="form-control" id="trip_type" name="trip_type">
+          <option value="NONE">ROUNTRIP/ONE-WAY</option>
+          <option value="ROUND_TRIP" >ROUNTRIP</option>
+          <option value="ONE_WAY" >ONE-WAY</option>
+        </select>
+      </div>
+    </div> -->
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="time">Date and time:</label>
+      <div class="col-sm-5">          
+        <input type="text" class="form-control" id="time"  name="time"> 
+      </div>
+
+      <label class="control-label col-sm-1" for="endtime">End by:</label>
+      <div class="col-sm-4">          
+        <input type="text" class="form-control" id="endtime"  name="endtime"> 
+      </div>
+
+      <!-- <label class="control-label col-sm-1" for="hr">Hours:</label>
+      <div class="col-sm-4">          
+        <input type="text" class="form-control" id="hr"  name="hr"> 
+      </div> -->
+    </div>
+
+
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="mpty"><input type='checkbox' id='checkbox1'> Empty trailer:</label>
+
+      <div class="col-sm-5" id="mptycover">
+        <input type="text" class="form-control" id="mpty" placeholder="" name="mpty" >
+      </div>
+      <label class="control-label col-sm-1" for="stops">Stops:</label>
+      <div class="col-sm-4">
+        <input type="number" class="form-control" id="stops" placeholder="3" name="stops">
+      </div>
+    </div>
+
+<br><br>
+  
+    <div class="form-group">  
+        <label class="col-sm-2"><input type="checkbox" id="nyichi" name="remember"> NY ichi</label>      
+    </div>
+
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="blck">Blacklist:</label>
+
+       
+      <div class="col-sm-10" id="chck"> 
+        <!-- <label class="col-sm-2" ><input type="checkbox" name="remember"> AK</label>
+        <label class="col-sm-2"><input type="checkbox" name="remember"> WA</label>
+        <label class="col-sm-2"><input type="checkbox" name="remember"> FL</label>
+        <label class="col-sm-2"><input type="checkbox" name="remember"> OR</label>
+        <label class="col-sm-2" ><input type="checkbox" name="remember"> UT</label>
+        <label class="col-sm-2"><input type="checkbox" name="remember"> OK</label>
+        <label class="col-sm-2"><input type="checkbox" name="remember"> AL</label>
+        <label class="col-sm-2"><input type="checkbox" name="remember"> LA</label> -->
+
+
+       <!--  <select multiple size=10 class="form-control" id="blck" name="blck">
+          <option value="NONE">States</option>
+          <option value="ABC" >North East</option>
+          <option value="ABC" >WA</option>
+          <option value="ABC" >CO</option>
+          <option value="ABC" >UT</option>
+          <option value="ABC" >OK</option>
+          <option value="ABC" >AL</option>
+          <option value="ABC" >FL</option>
+          <option value="ABC" >NY ichi</option>
+          <option value="ABC" >OR</option>
+        </select> -->
+      </div>
+      
+    </div>
+    <!-- <div id="copyTarget"> helloooo</div> -->
+
+
+
+
+    <div class="form-group">        
+      <div class="col-sm-offset-2 col-sm-10">
+        <div class="checkbox">
+          <!-- <label><input type="checkbox" name="remember"> Inbound</label> -->
+          <!-- <label><input type="checkbox" name="remember"> ITR</label> -->
+        <!--  https://relay.amazon.com/api/tours/loadboard?sortByField=creationTime&sortOrder=desc
+
+         &equipmentTypeFilters=FIFTY_THREE_FOOT_TRUCK,SKIRTED_FIFTY_THREE_FOOT_TRUCK,FIFTY_THREE_FOOT_DRY_VAN&nextItemToken=0&resultSize=100&searchURL=&savedSearchId=&notificationId= -->
+
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">        
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="button"  id="generate" class="btn btn-default">Submit</button>
+       <div style="opacity: 0;"> <input type="text" value="Hello World" id="myInput"></div>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+<!-- <div class="container">
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        /.box-header
+        <div class="box-body">
+          <form>
+            <div class="form-group row">
+              <label for="" class="col-sm-2 form-control-label">Country</label>
+              <div class="col-sm-10">
+                <select class="form-control selectpicker" id="mySelect" data-live-search="true">
+                <option data-tokens="china">China</option>
+  <option data-tokens="malayasia">Malayasia</option>
+  <option data-tokens="singapore">Singapore</option>
+                </select>
+
+              </div>
+            </div>
+          </form>
+        </div>
+        
+      </div>
+      
+    </div> -->
+
+<script type="text/javascript">
+function myFunction() {
+  var copyText = document.getElementById("myInput");
+  copyText.select();
+  copyText.setSelectionRange(0, 99999)
+  document.execCommand("copy");
+  alert("Copied the text: " );
+}
+
+var dt=new Date();
+var y=dt.getFullYear();
+var m=dt.getMonth()+1; m=(m/10>1)? m:"0"+m;
+var d=dt.getDate(); d=(d/10>=1)? d:"0"+d;
+
+var h=dt.getHours(); h=(h/10>=1)? h:"0"+h;
+var mn=dt.getMinutes(); mn=(mn/10>=1)? mn:"0"+mn;
+var s=dt.getSeconds(); s=(s/10>=1)? s:"0"+s;
+
+  $('#mpty').val(y+"-"+m+"-"+d+"T"+h+":"+mn+":"+s);
+  $('#time').val(y+"-"+m+"-"+d+"T"+h+":"+mn+":"+s);	
+	d=Number(d)+1;
+	d=(d/10>=1)? d:"0"+d;
+  $('#endtime').val(y+"-"+m+"-"+(d)+"T"+h+":"+mn+":"+s);
+  //$('#mpty').placeholder(y+"-"+m+"-"+d+"T"+h+":"+mn+":"+s);
+  //add options to sellect
+  $.each(states, function(key, value) {   
+     $('#chck')
+         .append($("<label class='col-sm-2'><input class='cts' type='checkbox' lat="+stwzip[value.st].zipMin+" lon="+stwzip[value.st].zipMax+" name='"+value.st+"'> "+value.st+"</label>")); //<label class='col-sm-2'><input type='checkbox' name='"+value.st+"'> "+value.st+"</label>
+                  //  .attr("value",key)//.attr("lon",value.lon)
+                   // .text(value.city+", "+ value.state)); 
+});
+$("#mptycover").css('visibility', 'hidden');
+
+ $(document).find('#checkbox1').change(function() {
+        if(this.checked) {
+          
+          $("#mptycover").css('visibility', 'visible');
+        }
+        else{
+          $("#mptycover").css('visibility', 'hidden');
+        }     
+    });
+
+  /*
+  if($("#isAgeSelected").is(':checked'))
+    $("#txtAge").show();  // checked
+else
+    $("#txtAge").hide();  // unchecked
+  */
+</script>
+<script type="text/javascript">
+//origin
+
+
+
+</script>
+<script type="text/javascript">
+//origin radius
+//var startCityRadius="";
+
+</script>
+<!-- <script type="text/javascript">
+aler
+var geocoder = new google.maps.Geocoder();
+var address = "new york";
+
+geocoder.geocode( { 'address': address}, function(results, status) {
+
+  if (status == google.maps.GeocoderStatus.OK) {
+    var latitude = results[0].geometry.location.lat();
+    var longitude = results[0].geometry.location.lng();
+    alert(latitude);
+  } 
+}); 
+</script> -->
+
+
+
+<script src="fncts.js"></script>
+</body>
+</html>
